@@ -2,6 +2,7 @@ package libisabelle.example
 
 import java.nio.file.Paths
 
+import edu.tum.cs.isabelle.System
 import edu.tum.cs.isabelle.api.{Configuration, Version}
 import edu.tum.cs.isabelle.setup.Setup
 
@@ -26,8 +27,11 @@ object Main extends App {
     isabelleBin = setup.home.resolve("bin/isabelle")
     _ <- mkRoot(isabelleBin.toString)
     config = Configuration.fromPath(Paths.get("."), session)
-    built = edu.tum.cs.isabelle.System.build(env, config)
-  } yield built
+    built = System.build(env, config)
+    _ <- Future(if (!built) sys.error(s"Could not built Isabelle session $session"))
+    sys <- System.create(env, config)
+    _ <- sys.dispose
+  } yield ()
 
   println(Await.result(res, Duration.Inf))
 }
