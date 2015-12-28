@@ -8,5 +8,7 @@ cache:
   directories:
   - "$HOME/.ivy2/cache"
   - "$HOME/.sbt/boot/"
+install:
+- git submodule update --init --recursive
 script:
 - sbt ++$TRAVIS_SCALA_VERSION run

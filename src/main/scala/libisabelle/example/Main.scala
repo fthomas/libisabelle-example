@@ -15,23 +15,15 @@ import scala.sys.process._
 object Main extends App {
   val logger = getLogger
   val version = Version("2015")
-  val session = "libisabelle-example"
-
-  def mkroot(isabelle: String): Future[Unit] = Future {
-    Seq("rm", "-f", "ROOT").!!
-    val out = Seq(isabelle, "mkroot", "-n", session).!!
-    logger.info(out)
-  }
+  val session = s"Protocol${version.identifier}"
 
   val future = for {
     setup <- Setup.defaultSetup(version)
     env <- setup.makeEnvironment
-    isabelle = setup.home.resolve("bin/isabelle")
-    _ <- mkroot(isabelle.toString)
     config = Configuration.fromPath(Paths.get("."), session)
     built = System.build(env, config)
     _ <- Future {
-      if (!built) sys.error(s"""Could not built session "$session"""")
+      if (!built) sys.error(s"""Could not build session "$session"""")
       else logger.info(s"""Built session "$session"""")
     }
     sys <- System.create(env, config)
