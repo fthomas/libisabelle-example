@@ -1,0 +1,3 @@
+[submodule "libisabelle-protocol"]
+	path = libisabelle-protocol
+	url = https://github.com/larsrh/libisabelle-protocol.git
